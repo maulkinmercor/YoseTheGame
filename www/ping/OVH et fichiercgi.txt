@@ -1,0 +1,53 @@
+http://kevinvuilleumier.net/2013/04/tutoriel-generer-une-page-en-python-chez-ovh/
+
+Le fait est qu’il est tout à fait possible de faire tourner des scripts écrits en Python (et même C) sur un hébergement mutualisé OVH (toutes les offres actuelles) !
+
+Le gros problème est que la documentation à ce sujet est inexistante ou alors très bien cachée : je n’ai rien trouvé dans leur documentation en ligne… D’autant qu’il ne suffit pas de « balancer » un fichier « .py » et espérer qu’il fonctionne sans autre forme de procès !
+
+
+Voici le canevas d’un script qui génère une page web :
+
+#!/usr/bin/python
+print "Content-type: text/html\n\n"
+print "<html><head><title>Page de test</title></head><body>\n"
+print "<p>Hello World</p>\n"
+print "</body></html>\n"
+Remarquez que les deux premières lignes sont obligatoires ! La première indique le chemin vers l’interpréteur Python et la deuxième l’entête de type de contenu envoyé au navigateur : elle doit contenir deux retours à la ligne !
+
+Enregistrez le code dans un fichier avec l’extention « .cgi » (et pas « .py ») et envoyez-le sur votre espace FTP, dans n’importe quel dossier. Vous devez impérativement lui donner les droits (chmod) 705 pour que l’exécution puisse se faire !
+
+Si vous avez fait comme il faut, un « Hello World » doit s’afficher quand vous accédez au script, sinon vous obtiendrez un code d’erreur 500 du plus bel effet…
+
+Si je résume :
+
+S’assurer que le script contient le chemin de l’exécutable et l’entête ;
+Donner l’extension « .cgi » ;
+Donner les droits 705 ;
+Placer n’importe où sur l’espace d’hébergement ;
+Exécuter !
+
++ OVH attention, le tranfert ftp doit se faire en ASCII et non en Binaire, sinon le fichier a l'air bon mais en fait non à cause des retours à la ligne.
++ OVH peut-être nécessaire que la 2ème ligne contienne juste # (pas vérifié sans, lu sur un forum)
++ modif du .htaccess pour faire un redirect de /ping vers le fichier .cgi
+
+réponse:
+C’est bien mais … c’est du CGI!
+Pas efficace donc, les ressources ne sont pas gardées en mémoire et rechargées constamment :/
+Personnellement, j’avais également à le placer dans le dossier /cgi-bin/ (qui n’est pas dans /www/ mais était quand même accessible comme s’il se situait dans /www/).
+Enfin, je rajouterais au moins ça si vous tentez vraiment à faire du CGI:
+
+import cgi
+import cgitb
+
+cgitb.enable()
+
+Le module cgi contient pas mal d’outil sympathique, le plus important étant cgi.escape (permettant d’échapper l’HTML ;) ) et
+form = cgi.FieldStorage() pour récupérer les données GET. (Je me suis jamais penché sur les données POST avec CGI …)
+
+Enfin, attention que parfois, juste réuploader le fichier lui enlève ses droits (et du coup pouf l’erreur 500 qui explique rien).
+
+La norme c’est de faire du WSGI. Seul problématique c’est que généralement il vous faudra un dédié ou un VPS pour faire ça … Contacter le support en cas de doute :)
+
+Je vous conseille WSGI.
+
+Répondre
