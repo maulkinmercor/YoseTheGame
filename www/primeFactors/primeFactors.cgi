@@ -1,24 +1,8 @@
 #!/usr/bin/python
 #
-import json
-import cgi
+import primeFactorsLib
 
-formulaire = cgi.FieldStorage()
-try:
-    number = int(formulaire.getvalue('number'))
-except:
-    number = 32
+numero = primeFactorsLib.lireParamsCgi()
+decomposition = primeFactorsLib.decomposerNumero(numero)
+primeFactorsLib.envoyerReponseJson(numero, decomposition)
 
-decomposition = []
-
-temp = number
-while temp % 2 == 0:
-    decomposition.append(2)
-    temp /= 2
-
-data = {'number':number, 'decomposition':decomposition}
-
-json_encoded = json.dumps(data)
-
-print "Content-type: application/json\n"
-print json_encoded
