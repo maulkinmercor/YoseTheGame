@@ -2,7 +2,8 @@
 #
 import primeFactorsLib
 
-numero = primeFactorsLib.lireParamsCgi()
+chaine = primeFactorsLib.lireParamsCgi()
+numero = primeFactorsLib.transformerEnNombre(chaine)
 decomposition = primeFactorsLib.decomposerNumero(numero)
-primeFactorsLib.envoyerReponseJson(numero, decomposition)
-
+reponseJson = primeFactorsLib.preparerReponseJson(numero, decomposition)
+primeFactorsLib.envoyerReponseJson(reponseJson)
