@@ -53,6 +53,10 @@ class TestPrimeFactors(unittest.TestCase):
         decoded = json.loads(retour)
         self.assertEqual(decoded['error'], "not a number")
         self.assertEqual(decoded['number'], "hello")
+
+    def test_deocmposer_300(self, MockClass):
+        decomposition = primeFactorsLib.decomposerNumero(300)
+        self.assertEqual(decomposition, [2,2,3,5,5])
         
 if __name__ == "__main__":
     unittest.main(module="powersOfTwoTests")
