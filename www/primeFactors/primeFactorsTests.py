@@ -51,7 +51,7 @@ class TestPrimeFactors(unittest.TestCase):
         retour = primeFactorsLib.preparerReponseJson("hello", "not a number")
         data = {'decomposition':"not a number", 'number':"hello"}
         decoded = json.loads(retour)
-        self.assertEqual(decoded['decomposition'], "not a number")
+        self.assertEqual(decoded['error'], "not a number")
         self.assertEqual(decoded['number'], "hello")
         
 if __name__ == "__main__":
