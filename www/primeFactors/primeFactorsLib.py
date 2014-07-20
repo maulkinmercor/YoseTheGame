@@ -20,9 +20,12 @@ def decomposerNumero(numero):
     if(isinstance(numero, int)):
         decomposition = []
         temp = numero
-        while temp % 2 == 0:
-            decomposition.append(2)
-            temp /= 2
+        increment = 2
+        while (increment <= temp):
+            while (temp % increment == 0):
+                decomposition.append(increment)
+                temp /= increment
+            increment += 1
     else:
         decomposition = "not a number"
     return decomposition
