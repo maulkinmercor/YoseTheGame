@@ -4,10 +4,20 @@ import cgi
 def lireParamsCgi():
     params = cgi.FieldStorage()
     try:
-        number = params["number"].value
+        number = params["number"][0].value
     except:
         number = "no param number"
     return number
+
+def lireListeParamsNumberCgi():
+    params = cgi.FieldStorage()
+    try:
+        numbers = params["number"]
+    except:
+        numbers = "no param number"
+    if not type(numbers) is list:
+        numbers = [numbers]
+    return numbers
 
 def transformerEnNombre(chaine):
     try:
@@ -45,6 +55,16 @@ def preparerReponseJson(nombre, decomposition):
             json_encoded = json.dumps(data)
     return json_encoded
 
-def envoyerReponseJson(json_encoded_data):
+def envoyerReponseJson(json_encoded_data_list):
     print "Content-type: application/json\n"
-    print json_encoded_data
+    if (len(json_encoded_data_list)==1):
+        print json_encoded_data_list[0]
+    else:
+        print "["
+        for reponse in json_encoded_data_list[0:-1]:
+            print reponse
+            print ","
+        print json_encoded_data_list[-1]
+        print "]"
+    
+

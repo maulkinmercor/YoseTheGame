@@ -9,8 +9,9 @@ class TestPrimeFactors(unittest.TestCase):
         def __init__(self, value):
             self.value = value
 
-    NUMBER16 = { "number" : ChampTest("16")}
-    NUMBERHELLO = { "number" : ChampTest("Hello")}
+    NUMBER16 = { "number" : [ChampTest("16")]}
+    NUMBERHELLO = { "number" : [ChampTest("Hello")]}
+    NUMBER_16_32_HELLO = { "number" : [ChampTest("16"), ChampTest("32"), ChampTest("hello")]}
 
     def test_lireParamsCgi_16(self, MockClass):
         instance = MockClass.return_value
@@ -20,6 +21,25 @@ class TestPrimeFactors(unittest.TestCase):
         paramNumero = primeFactorsLib.transformerEnNombre(paramString)
         self.assertEqual(paramNumero, 16)
 
+    def test_lireListeParamsCgi_16(self, MockClass):
+        instance = MockClass.return_value
+        instance.__getitem__ = lambda s, key: TestPrimeFactors.NUMBER16[key]
+        instance.__contains__ = lambda s, key: key in TestPrimeFactors.NUMBER16
+        parametres = primeFactorsLib.lireListeParamsNumberCgi()
+        for parametre in parametres:
+            paramNumero = primeFactorsLib.transformerEnNombre(parametre.value)
+        self.assertEqual(paramNumero, 16)
+
+    def test_lireListeParams(self, MockClass):
+        instance = MockClass.return_value
+        instance.__getitem__ = lambda s, key: TestPrimeFactors.NUMBER_16_32_HELLO[key]
+        instance.__contains__ = lambda s, key: key in TestPrimeFactors.NUMBER_16_32_HELLO
+        parametres = primeFactorsLib.lireListeParamsNumberCgi()
+        paramsNumeros = []
+        for parametre in parametres:
+            paramsNumeros.append(primeFactorsLib.transformerEnNombre(parametre.value))
+        self.assertEqual(paramsNumeros, [16, 32, "hello"])
+        
     def test_decomposer_numero_2(self, MockClass):
         decomposition = primeFactorsLib.decomposerNumero(2)
         self.assertEqual(decomposition, [2])
