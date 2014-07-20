@@ -40,6 +40,10 @@ class TestPrimeFactors(unittest.TestCase):
         decomposition = primeFactorsLib.decomposerNumero("Hello")
         self.assertEqual(decomposition, "not a number")
 
+    def test_decomposer_1000001(self, MockClass):
+        decomposition = primeFactorsLib.decomposerNumero(1000001)
+        self.assertEqual(decomposition, "too big number (>1e6)")
+
     def test_json_response_number2(self, MockClass):
         retour = primeFactorsLib.preparerReponseJson(2, [2])
         data = {'decomposition':[2], 'number':2}
@@ -54,13 +58,24 @@ class TestPrimeFactors(unittest.TestCase):
         self.assertEqual(decoded['error'], "not a number")
         self.assertEqual(decoded['number'], "hello")
 
-    def test_deocmposer_300(self, MockClass):
+    def test_json_response_1000001_too_big(self, MockClass):
+        retour = primeFactorsLib.preparerReponseJson(1000001, "too big number (>1e6)")
+        data = {'error':"too big number (>1e6)", 'number':1000001}
+        decoded = json.loads(retour)
+        self.assertEqual(decoded['error'], "too big number (>1e6)")
+        self.assertEqual(decoded['number'], 1000001)
+        
+    def test_decomposer_300(self, MockClass):
         decomposition = primeFactorsLib.decomposerNumero(300)
         self.assertEqual(decomposition, [2,2,3,5,5])
 
-    def test_deocmposer_360(self, MockClass):
+    def test_decomposer_360(self, MockClass):
         decomposition = primeFactorsLib.decomposerNumero(360)
         self.assertEqual(decomposition, [2,2,2,3,3,5])
+
+    def test_decomposer_1000000(self, MockClass):
+        decomposition = primeFactorsLib.decomposerNumero(1000000)
+        self.assertEqual(decomposition, [2,2,2,2,2,2,5,5,5,5,5,5])
         
 if __name__ == "__main__":
     unittest.main(module="powersOfTwoTests")

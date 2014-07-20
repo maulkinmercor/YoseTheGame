@@ -18,14 +18,17 @@ def transformerEnNombre(chaine):
 
 def decomposerNumero(numero):
     if(isinstance(numero, int)):
-        decomposition = []
-        temp = numero
-        increment = 2
-        while (increment <= temp):
-            while (temp % increment == 0):
-                decomposition.append(increment)
-                temp /= increment
-            increment += 1
+        if(numero <= 1e6):
+            decomposition = []
+            temp = numero
+            increment = 2
+            while (increment <= temp):
+                while (temp % increment == 0):
+                    decomposition.append(increment)
+                    temp /= increment
+                increment += 1
+        else:
+            decomposition = "too big number (>1e6)"
     else:
         decomposition = "not a number"
     return decomposition
@@ -35,8 +38,11 @@ def preparerReponseJson(nombre, decomposition):
     errordata = {'number':nombre, 'error':"not a number"}
     if (isinstance(nombre, str)): # and nombre == "not a number"):
         json_encoded = json.dumps(errordata)
-    else:
-        json_encoded = json.dumps(data)
+    else :
+        if (decomposition == "too big number (>1e6)"):
+            json_encoded = json.dumps({'number':nombre, 'error':decomposition})
+        else:
+            json_encoded = json.dumps(data)
     return json_encoded
 
 def envoyerReponseJson(json_encoded_data):
